@@ -14,7 +14,7 @@ bool Screen::init()
   }
 
   // initialize window
-  m_window = SDL_CreateWindow("Particle Fire", 
+  m_window = SDL_CreateWindow("Fractal Explorer", 
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -69,7 +69,7 @@ void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue){
 
   // RGBA
 
-  m_buffer1[(y * SCREEN_WIDTH + x)] = color;
+  m_buffer2[(y * SCREEN_WIDTH + x)] = color;
 }
 
 void Screen::update(){
@@ -80,67 +80,13 @@ void Screen::update(){
 }
 
 void Screen::clear(){
-  memset(m_buffer1, 0, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
   memset(m_buffer2, 0, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
-void Screen::boxBlur(){
-
-  double blurAmount = 1; // Best between 0.9 and 1
-
-  // buffer data swap
+void Screen::bufferSwap(){
   Uint32 *temp = m_buffer1;
   m_buffer1 = m_buffer2;
   m_buffer2 = temp;
-
-  for(int y = 0; y < SCREEN_HEIGHT; y++){
-    for(int x = 0; x < SCREEN_WIDTH; x++){
-
-      /*
-      *   C
-      *   O
-      *   L
-      * 0 0 0 
-      * 0 1 0 row
-      * 0 0 0
-      */
-
-     int redTotal = 0;
-     int greenTotal = 0;
-     int blueTotal = 0;
-
-      for(int row = -1; row <= 1; row++){
-        for(int col = -1; col <= 1; col++){
-          int currentX = x + col;
-          int currentY = y + row;
-
-          // If pixel is on screen
-          if(currentX >= 0 && currentX < SCREEN_WIDTH && currentY >= 0 && currentY < SCREEN_HEIGHT){
-            Uint32 color = m_buffer2[currentY * SCREEN_WIDTH + currentX]; // get current pixel
-
-            // Get colors from pixel
-            Uint8 red = color >> 24; //123456FF
-            Uint8 green = color >> 16;
-            Uint8 blue = color >> 8;
-
-            // Add up amount of color in the box pattern in total
-            redTotal += red;
-            greenTotal += green;
-            blueTotal += blue;
-
-          }
-        }
-      }
-
-      // Divide by 9 for the 9 pixels checked in box pattern for total color
-      Uint8 red = redTotal/9 * blurAmount;
-      Uint8 green = greenTotal/9 * blurAmount;
-      Uint8 blue = blueTotal/9 * blurAmount;
-
-      setPixel(x,y,red,green,blue);
-
-    }
-  }
 }
 
 bool Screen::quit()

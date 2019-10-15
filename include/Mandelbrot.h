@@ -11,6 +11,7 @@ public:
 	virtual ~Mandelbrot();
 
 	static int getIterations(double x, double y);
+	static int getIterations(double x, double y, int customMaxIteratons);
 };
 
 }

@@ -25,7 +25,7 @@ class Screen
     bool init();
     void update();
     void clear();
-    void boxBlur();
+    void bufferSwap();
     void setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue);
     bool quit();
     void close();

@@ -4,7 +4,7 @@ namespace Fractal{
 
 
 void FractalCreator::addRange(double rangeEnd, const RGB &rbg){
-  m_ranges.push_back(rangeEnd * Mandelbrot::MAX_ITERATIONS);
+  m_ranges.push_back(rangeEnd * m_maxIterations);
   m_colors.push_back(rbg);
 
   if(m_bGotFirstRange){
@@ -19,9 +19,6 @@ void FractalCreator::addZoom(const Zoom &zoom){
 }
 
 void FractalCreator::run(){
-  m_screen->clear();
-  m_screen->update();
-
   calculateIndividualIterations();
   calcuateTotalIterations();
   calculateRangeTotals();
@@ -29,9 +26,10 @@ void FractalCreator::run(){
   updateScreen();
 }
 
-FractalCreator::FractalCreator(int width, int height, Graphics::Screen *screen):m_width(width),
+FractalCreator::FractalCreator(int maxIterations, int width, int height, Graphics::Screen *screen):m_width(width),
                                                       m_height(height),
-                                                      m_histogram(new int[Mandelbrot::MAX_ITERATIONS]{0}),
+                                                      m_maxIterations(maxIterations),
+                                                      m_histogram(new int[maxIterations]{0}),
                                                       m_fractal(new int[width*height]{0}),
                                                       m_screen(screen),
                                                       m_zoomList(width, height)
@@ -50,11 +48,11 @@ void FractalCreator::calculateIndividualIterations(){
     for(int x = 0; x < m_width; x++){
       std::pair<double, double> coords = m_zoomList.doZoom(x, y);
 
-      int iterations = Mandelbrot::getIterations(coords.first, coords.second);
+      int iterations = Mandelbrot::getIterations(coords.first, coords.second, m_maxIterations);
 
       m_fractal[y*m_width+x] = iterations;
 
-      if(iterations != Mandelbrot::MAX_ITERATIONS){
+      if(iterations != m_maxIterations){
         m_histogram[iterations]++;
       }
     }
@@ -63,7 +61,7 @@ void FractalCreator::calculateIndividualIterations(){
 
 void FractalCreator::calcuateTotalIterations(){
   
-  for(int i = 0;i < Mandelbrot::MAX_ITERATIONS; i++){
+  for(int i = 0;i < m_maxIterations; i++){
     m_totalIterations += m_histogram[i];
   }
 }
@@ -72,7 +70,7 @@ void FractalCreator::calculateRangeTotals(){
 
   int rangeIndex = 0;
 
-  for(int i = 0; i < Mandelbrot::MAX_ITERATIONS; i++){
+  for(int i = 0; i < m_maxIterations; i++){
     int pixels = m_histogram[i];
 
     if(i >= m_ranges[rangeIndex+1]){
@@ -123,7 +121,7 @@ void FractalCreator::drawFractal(){
       uint8_t green = 0;
       uint8_t blue = 0;
 
-      if(iterations != Mandelbrot::MAX_ITERATIONS){
+      if(iterations != m_maxIterations){
 
         int totalPixels = 0;
 
@@ -147,7 +145,9 @@ void FractalCreator::drawFractal(){
 }
 
 void FractalCreator::updateScreen(){ 
+  m_screen->bufferSwap();
   m_screen->update();
+  m_screen->clear();
 }
 
 }

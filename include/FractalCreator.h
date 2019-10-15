@@ -19,6 +19,7 @@ class FractalCreator {
 private:
   int m_width;
   int m_height;
+  int m_maxIterations;
   std::unique_ptr<int[]> m_histogram;
   std::unique_ptr<int[]> m_fractal;
   std::unique_ptr<Graphics::Screen> m_screen;
@@ -40,7 +41,7 @@ private:
   int getRange(int iterations) const;
 
 public:
-  FractalCreator(int width, int height, Graphics::Screen *screen);
+  FractalCreator(int maxIterations, int width, int height, Graphics::Screen *screen);
   virtual ~FractalCreator();
   
   void addRange(double rangeEnd, const RGB &rbg);

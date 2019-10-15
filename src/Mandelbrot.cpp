@@ -33,4 +33,24 @@ int Mandelbrot::getIterations(double x, double y){
   return iterations;
 }
 
+int Mandelbrot::getIterations(double x, double y, int customMaxIterations){
+
+  complex<double> z = 0;
+  complex<double> c(x, y);
+
+  int iterations = 0;
+
+  while(iterations < customMaxIterations){
+    z = z*z + c;
+
+    if(abs(z) > 2) {
+      break;
+    }
+
+    iterations++;
+  }
+
+  return iterations;
+}
+
 }
