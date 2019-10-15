@@ -19,6 +19,9 @@ void FractalCreator::addZoom(const Zoom &zoom){
 }
 
 void FractalCreator::run(){
+  m_screen->clear();
+  m_screen->update();
+
   calculateIndividualIterations();
   calcuateTotalIterations();
   calculateRangeTotals();
@@ -131,6 +134,10 @@ void FractalCreator::drawFractal(){
         red = startColor.r + colorDif.r * (double)totalPixels/rangeTotal;
         green = startColor.g + colorDif.g * (double)totalPixels/rangeTotal;
         blue = startColor.b + colorDif.b * (double)totalPixels/rangeTotal;
+
+        red *= red;
+        green *= green;
+        blue *= blue;
       }
 
       m_screen->setPixel(x, y, red, green, blue);
@@ -140,7 +147,6 @@ void FractalCreator::drawFractal(){
 }
 
 void FractalCreator::updateScreen(){ 
-  m_screen->clear();
   m_screen->update();
 }
 

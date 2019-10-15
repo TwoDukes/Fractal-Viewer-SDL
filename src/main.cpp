@@ -21,9 +21,9 @@ int main() {
   Fractal::FractalCreator fractalCreator(screen.SCREEN_WIDTH, screen.SCREEN_HEIGHT, &screen);
 
   fractalCreator.addRange(0.0, RGB(0,0,0));
-  fractalCreator.addRange(0.3, RGB(88, 237, 217));
-  fractalCreator.addRange(0.5, RGB(206, 95, 237));
-  fractalCreator.addRange(1.0, RGB(255, 240, 36));
+  fractalCreator.addRange(0.3, RGB(206, 95, 237));
+  fractalCreator.addRange(0.5, RGB(88, 237, 217));
+  fractalCreator.addRange(1.0, RGB(255, 240, 36));;
 
   //fractalCreator.addZoom(Fractal::Zoom(632, 382, 0.1));
   fractalCreator.run();
@@ -39,6 +39,8 @@ int main() {
     if(SDL_PollEvent(&event)){
       if(event.type == SDL_MOUSEBUTTONDOWN){
         cout << event.motion.x << ", " << event.motion.y << endl;
+        fractalCreator.addZoom(Fractal::Zoom(event.motion.x, event.motion.y, 0.1));
+        fractalCreator.run();
       }
     }
 
