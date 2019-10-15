@@ -2,7 +2,7 @@
 
 namespace Graphics {
 
-Screen::Screen(/* args */): m_window(NULL),m_renderer(NULL),m_texture(NULL),m_buffer1(NULL)
+Screen::Screen(): m_window(nullptr),m_renderer(nullptr),m_texture(nullptr),m_buffer1(nullptr)
 {
     
 }
